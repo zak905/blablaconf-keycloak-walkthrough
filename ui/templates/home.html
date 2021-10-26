@@ -1,0 +1,17 @@
+{{ define "home" }}
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h2> Hey blabla conf !</h2>
+        <h2>here are the conferences for today:</h2>
+        <ul>
+            {{ range $.conferences }}
+              <li>{{ . }}</li>
+            {{ end }}
+        </ul>
+    </body>
+</html>
+
+{{ end }}
