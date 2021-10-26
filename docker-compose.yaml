@@ -3,13 +3,17 @@ services:
   keycloak:
     build:
       context: .
-    ports: ["8080:8080"]
+    ports: ["8080:8080", "8787:8787"]
   ui:
     build:
       context: ui
     ports: ["8081:8081"]
     environment:
       CONFERENCE_API_URL: api:8082
+      KEYCLOAK_BASE_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: blablaconf
+      KEYCLOAK_CLIENT_ID: ui
+      KEYCLOAK_CLIENT_SECRET: 07a85517-bdce-4c2f-b6b0-173440235e25
     volumes:
       - "./ui:/ui"
   api:

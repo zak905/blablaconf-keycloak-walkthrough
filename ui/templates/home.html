@@ -4,13 +4,19 @@
 
     </head>
     <body>
-        <h2> Hey blabla conf !</h2>
-        <h2>here are the conferences for today:</h2>
-        <ul>
-            {{ range $.conferences }}
-              <li>{{ . }}</li>
-            {{ end }}
-        </ul>
+            <h2> Hey {{ .user }} ! Welcome to blabla conf</h2>
+            <h2>here are the conferences for today:</h2>
+            <ul>
+                {{ range $.conferences }}
+                <li>{{ . }}</li>
+                {{ end }}
+            </ul>
+            <br>
+            <br>
+            <h3>Token: </h3>
+            <pre>
+                {{ .token }}
+            </pre>
     </body>
 </html>
 

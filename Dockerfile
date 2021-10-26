@@ -18,5 +18,6 @@ WORKDIR keycloak
 RUN ./bin/add-user-keycloak.sh -r master -u admin -p admin --roles admin
 
 EXPOSE 8080
+EXPOSE 8787
 
-ENTRYPOINT ["./bin/standalone.sh", "-b", "0.0.0.0"]
+ENTRYPOINT ["./bin/standalone.sh", "-b", "0.0.0.0", "--debug", "*:8787"]
