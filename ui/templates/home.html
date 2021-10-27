@@ -4,13 +4,15 @@
 
     </head>
     <body>
-            <h2> Hey {{ .user }} ! Welcome to blabla conf</h2>
+            <h2> Hey {{ .user }} ! Welcome to blabla conf!</h2> 
+
             <h2>here are the conferences for today:</h2>
             <ul>
                 {{ range $.conferences }}
                 <li>{{ . }}</li>
                 {{ end }}
             </ul>
+            <h3><a href="{{ .accountURL }}" target="_blank">Access Account</a></h3>
             <br>
             <br>
             <h3>Token: </h3>

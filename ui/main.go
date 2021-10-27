@@ -92,7 +92,8 @@ func main() {
 			if err := templates.ExecuteTemplate(w, "home", map[string]interface{}{
 				"conferences": conferences,
 				"user":        user,
-				"token":       token_raw}); err != nil {
+				"token":       token_raw,
+				"accountURL":  config.keycloakBaseURL + "/realms/" + config.keycloakRealm + "/account"}); err != nil {
 				w.Write([]byte(err.Error()))
 			}
 
