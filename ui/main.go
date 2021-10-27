@@ -56,7 +56,15 @@ func main() {
 		sub.Use(keycloakMiddleware(sessionStorage, oauthConfig, parser))
 		sub.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
-			res, err := http.Get("http://" + config.conferenceAPIAddr)
+			token := r.Context().Value("token").(*oauth2.Token)
+
+			request, _ := http.NewRequest(http.MethodGet, "http://"+config.conferenceAPIAddr, nil)
+
+			//always check erros, this is just a demo
+
+			token.SetAuthHeader(request)
+
+			res, err := http.DefaultClient.Do(request)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -65,7 +73,11 @@ func main() {
 
 			var conferences []string
 
-			err = json.NewDecoder(res.Body).Decode(&conferences)
+			if res.StatusCode != 200 {
+				conferences = []string{"unable to fetch conferences list, got status: " + res.Status}
+			} else {
+				err = json.NewDecoder(res.Body).Decode(&conferences)
+			}
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -75,12 +87,12 @@ func main() {
 
 			user := r.Context().Value("user").(string)
 
-			token := r.Context().Value("token").(string)
+			token_raw := r.Context().Value("token_raw").(string)
 
 			if err := templates.ExecuteTemplate(w, "home", map[string]interface{}{
 				"conferences": conferences,
 				"user":        user,
-				"token":       token}); err != nil {
+				"token":       token_raw}); err != nil {
 				w.Write([]byte(err.Error()))
 			}
 
@@ -210,7 +222,8 @@ func keycloakMiddleware(sessionStorage map[string]interface{}, config *oauth2.Co
 			//TODO: check error, this is just a demo
 
 			r = r.WithContext(context.WithValue(r.Context(), "user", jwtToken.Claims.(jwt.MapClaims)["name"]))
-			r = r.WithContext(context.WithValue(r.Context(), "token", string(tokenBytes)))
+			r = r.WithContext(context.WithValue(r.Context(), "token_raw", string(tokenBytes)))
+			r = r.WithContext(context.WithValue(r.Context(), "token", token))
 
 			next.ServeHTTP(w, r)
 		}
