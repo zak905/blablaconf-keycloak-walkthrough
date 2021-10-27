@@ -4,6 +4,8 @@ services:
     build:
       context: .
     ports: ["8080:8080", "8787:8787"]
+    volumes:
+      - "./keycloak-data:/import"
   ui:
     build:
       context: ui
@@ -13,13 +15,15 @@ services:
       KEYCLOAK_BASE_URL: http://keycloak:8080/auth
       KEYCLOAK_REALM: blablaconf
       KEYCLOAK_CLIENT_ID: ui
-      KEYCLOAK_CLIENT_SECRET: 07a85517-bdce-4c2f-b6b0-173440235e25
+      KEYCLOAK_CLIENT_SECRET: 2deec549-c51d-4120-9e97-6e7f5d578fb5
     volumes:
       - "./ui:/ui"
   api:
     build:
       context: api
     ports: ["8082:8082"]
+    environment:
+      KEYCLOAK_CLIENT_SECRET: ef94d40e-887f-41f3-8547-67b214b84ef2
   mail:
     image: mailhog/mailhog
     ports:
